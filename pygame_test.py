@@ -10,6 +10,7 @@ Create own assets
 import pygame
 import time
 import random
+import entity
 
 pygame.init()
 
@@ -25,17 +26,13 @@ black = (0,0,0)
 white = (255,255,255)
 #create a pygame clock to keep track of time
 clock = pygame.time.Clock()
-#used to see if the game is crashed
 
 #set carImg to have the location of the race car image
 carImg = pygame.image.load('racecar.png')
 car_width = 73
 car_height = 82
-
-def things(thingx, thingy, thingw, thingh, color):
-    pygame.draw.rect(gameDisplay, color, [thingx, thingy, thingw, thingh])
-
 #used to place where the car is going to be
+obstical = entity.thing(random.randrange(0,display_width),-600,100,100,13, (0,0,0))
 def car(x,y):
     gameDisplay.blit(carImg, (x,y))
 
@@ -62,8 +59,7 @@ def display_message(text_to_display):
 def crash():
     message_display('You Crashed')
     game_loop()
-		
-
+			
 def game_loop():
 	
 	gameExit = False
@@ -72,13 +68,6 @@ def game_loop():
 	#used to change where the car is on the x axis. It's used inside the game loop as an updater.
 	x_change = 0
 	y_change = 0
-	#Used to init the objects
-	thing_startx = random.randrange(0, display_width)
-	thing_starty = -600
-	thing_speed = 13
-	#set the object height and width
-	thing_width = 100
-	thing_height = 100
 
 	while not gameExit:
 		for event in pygame.event.get():
@@ -117,8 +106,10 @@ def game_loop():
 		
 		#Set the object vairables with the ones used above (line 67 - 72)
 		gameDisplay.fill(white)
-		things(thing_startx, thing_starty, thing_width, thing_height, black)
-		thing_starty += thing_speed
+		
+		obstical.draw_thing_rec(gameDisplay)
+		obstical.thingy += obstical.thing_speed
+		obstical.respawn_check(obstical.thingx, obstical.thingy,display_height, display_width)
 		car(x,y)
 		
 		
@@ -127,23 +118,12 @@ def game_loop():
 			crash()
 		if y > display_height - car_height or y < 0:
 			crash()
-			
-			
-		#When the object moves off the screen move it to a new position
-		if thing_starty > display_height:
-			thing_starty = 0 - thing_height
-			thing_startx = random.randrange(0,display_width)
-			print ("object respawned")
-		#see if the y axis of the player object and the y axis of the obstical object cross over	
-		if y < thing_starty + thing_height:
-			print("y crossover occurred")
-			
-			#if it does then check to see if the x axis of both objects cross over
-			if x > thing_startx and x < thing_startx + thing_width or x+car_width > thing_startx and x + car_width < thing_startx+thing_width:
-				print("x crossover occurred")
-				print("player crashed into object")
-				crash()
-				
+
+		
+		#see if the y axis of the player object and the y axis of the obstical object cross over
+		if obstical.check_colision(x,y,car_width) == True:
+			crash()	
+	
 		pygame.display.update()
 		clock.tick(60)
 		
