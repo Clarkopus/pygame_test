@@ -70,6 +70,8 @@ def game_loop():
 	y_change = 0
 
 	while not gameExit:
+		print(obstical.thingx)
+		print(obstical.thingy)
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()

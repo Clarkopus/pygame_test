@@ -18,7 +18,7 @@ class thing:
 		
 	def respawn_check(self,x,y,display_height,display_width):
 		if y > display_height:
-			y = 0 - self.thingh
+			y = 10 - self.thingh
 			x = random.randrange(0,display_width)
 			print ("object respawned")
 			
