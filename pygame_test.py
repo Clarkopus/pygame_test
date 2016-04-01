@@ -14,8 +14,8 @@ import entity
 
 pygame.init()
 
-display_width = 800
-display_height = 600
+display_width = 1000
+display_height = 900
 
 #set the display to be 800 x 600
 gameDisplay = pygame.display.set_mode((display_width,display_height))
@@ -32,7 +32,9 @@ carImg = pygame.image.load('racecar.png')
 car_width = 73
 car_height = 82
 #used to place where the car is going to be
-obstacle = entity.squareObject(random.randrange(0,display_width),-600,100,100,13, (0,0,0))
+obstacle = entity.squareObject(random.randrange(0,display_width),-600,100,100,20, (0,0,0))
+obstacle2 = entity.squareObject(random.randrange(0,display_width),-600,100,100,17, (0,0,0))
+obstacle3 = entity.squareObject(random.randrange(0,display_width),-600,100,100,18, (0,0,0))
 def car(x,y):
     gameDisplay.blit(carImg, (x,y))
 
@@ -58,8 +60,12 @@ def display_message(text_to_display):
 
 def crash():
     message_display('You Crashed')
-    obstacle.objecty = 0
-    obstacle.objectx = random.randrange(0,display_width)
+    obstacle.objecty -=display_height
+    obstacle.objectx = random.randrange(0,(display_width - obstacle.objectw))
+    obstacle2.objecty -=display_height
+    obstacle2.objectx = random.randrange(0,(display_width - obstacle2.objectw))
+    obstacle3.objecty -=display_height
+    obstacle3.objectx = random.randrange(0,(display_width - obstacle3.objectw))
     game_loop()
 		
 			
@@ -67,13 +73,10 @@ def game_loop():
 	
 	gameExit = False
 	x =  (display_width * 0.45)
-	y = (display_height * 0.8)
+	y = (display_height * 0.9)
 
 	#used to change where the car is on the x axis. It's used inside the game loop as an updater.
 	x_change = 0
-	y_change = 0
-	bx_change = 0
-	by_change = 0
 
 	while not gameExit:
 		for event in pygame.event.get():
@@ -90,11 +93,6 @@ def game_loop():
 				elif event.key == pygame.K_RIGHT:
 					x_change = 9
 					
-				#Same as above but for the y axis instead	
-				elif event.key ==pygame.K_UP:
-					y_change = -9
-				elif event.key == pygame.K_DOWN:
-					y_change = 9
 				
 				#If the escape key is pressed close the game
 				elif event.key == pygame.K_ESCAPE:
@@ -103,19 +101,24 @@ def game_loop():
 			#Check to see if a key is pressed up
 			if event.type == pygame.KEYUP:
 				#If a ket is pressed up and it's either the left arrow key or the right arrow key change x_change to 0
-				if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+				if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
 					x_change = 0
-					y_change = 0
 		#Update x with what ever x was and add the value of x_change to it
 		x += x_change
-		y += y_change
 		
 		#Set the object vairables with the ones used above (line 67 - 72)
 		gameDisplay.fill(white)
 		
 		obstacle.draw_object_rec(gameDisplay)
+		obstacle2.draw_object_rec(gameDisplay)
+		obstacle3.draw_object_rec(gameDisplay)
 		obstacle.objecty += obstacle.object_speed
+		obstacle2.objecty += obstacle2.object_speed
+		obstacle3.objecty += obstacle3.object_speed
 		obstacle.respawn_check(obstacle.objectx, obstacle.objecty,display_height, display_width)
+		obstacle2.respawn_check(obstacle2.objectx, obstacle2.objecty, display_height, display_width)
+		obstacle3.respawn_check(obstacle3.objectx, obstacle3.objecty, display_height, display_width)
+		
 		car(x,y)
 		
 		
@@ -126,13 +129,13 @@ def game_loop():
 				x = display_width - car_width
 			elif x < 0:
 				x = 0
-		if y > display_height - car_height or y < 0:
-			y_change = 0
 
 		
 		#see if the y axis of the player object and the y axis of the obstacle object cross over
 		if obstacle.check_colision(x,y,car_width) == True:
 			crash()	
+		if obstacle2.check_colision(x,y,car_width) == True:
+			crash()
 	
 		pygame.display.update()
 		clock.tick(60)
