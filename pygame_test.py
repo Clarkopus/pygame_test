@@ -20,7 +20,7 @@ display_height = 600
 #set the display to be 800 x 600
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 #set the display caption
-pygame.display.set_caption('A bit Racey')
+pygame.display.set_caption('Dodge shit get hit')
 
 black = (0,0,0)
 white = (255,255,255)
@@ -32,7 +32,7 @@ carImg = pygame.image.load('racecar.png')
 car_width = 73
 car_height = 82
 #used to place where the car is going to be
-obstical = entity.thing(random.randrange(0,display_width),-600,100,100,13, (0,0,0))
+obstacle = entity.squareObject(random.randrange(0,display_width),-600,100,100,13, (0,0,0))
 def car(x,y):
     gameDisplay.blit(carImg, (x,y))
 
@@ -58,20 +58,24 @@ def display_message(text_to_display):
 
 def crash():
     message_display('You Crashed')
+    obstacle.objecty = 0
+    obstacle.objectx = random.randrange(0,display_width)
     game_loop()
+		
 			
 def game_loop():
 	
 	gameExit = False
 	x =  (display_width * 0.45)
 	y = (display_height * 0.8)
+
 	#used to change where the car is on the x axis. It's used inside the game loop as an updater.
 	x_change = 0
 	y_change = 0
+	bx_change = 0
+	by_change = 0
 
 	while not gameExit:
-		print(obstical.thingx)
-		print(obstical.thingy)
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
@@ -109,21 +113,25 @@ def game_loop():
 		#Set the object vairables with the ones used above (line 67 - 72)
 		gameDisplay.fill(white)
 		
-		obstical.draw_thing_rec(gameDisplay)
-		obstical.thingy += obstical.thing_speed
-		obstical.respawn_check(obstical.thingx, obstical.thingy,display_height, display_width)
+		obstacle.draw_object_rec(gameDisplay)
+		obstacle.objecty += obstacle.object_speed
+		obstacle.respawn_check(obstacle.objectx, obstacle.objecty,display_height, display_width)
 		car(x,y)
 		
 		
-		#If x,  the x cord location of the car, is greater than the width of the screen minus the car width or if x is smaller than 0 then close the game.
+		#If x,  the x cord location of the car, is greater than the width of the screen minus the car width or if x is smaller than 0 then stop it from reaching the end of the screen
 		if x > display_width - car_width or x < 0:
-			crash()
+			x_change = 0
+			if x > display_width - car_width:
+				x = display_width - car_width
+			elif x < 0:
+				x = 0
 		if y > display_height - car_height or y < 0:
-			crash()
+			y_change = 0
 
 		
-		#see if the y axis of the player object and the y axis of the obstical object cross over
-		if obstical.check_colision(x,y,car_width) == True:
+		#see if the y axis of the player object and the y axis of the obstacle object cross over
+		if obstacle.check_colision(x,y,car_width) == True:
 			crash()	
 	
 		pygame.display.update()
