@@ -31,6 +31,17 @@ class squareObject:
 				print("player crashed into object")
 				did_crash = True
 				return did_crash
+
+class player:
+	
+	def __init__ (self, car_image, car_width, car_height,x,y):
+		self.car_image = car_image
+		self.car_width = car_width
+		self.car_height = car_height
+		
+	def car(self,gameDisplay,x,y):
+		gameDisplay.blit(self.car_image, (x,y))
+		
 		
 
 
