@@ -23,21 +23,6 @@ black = (0,0,0)
 white = (255,255,255)
 #create a pygame clock to keep track of time
 clock = pygame.time.Clock()
-
-
-def text_objects(text, font):
-	
-    textSurface = font.render(text, True, black)
-    return textSurface, textSurface.get_rect()
-
-def message_display(text):
-	
-    largeText = pygame.font.Font('freesansbold.ttf',115)
-    TextSurf, TextRect = text_objects(text, largeText)
-    TextRect.center = ((display_width/2),(display_height/2))
-    gameDisplay.blit(TextSurf, TextRect)
-    pygame.display.update()
-    time.sleep(2)
        
  #custom function to create messages on the screen   
 def display_message(text_to_display):
@@ -52,8 +37,7 @@ def crash():
     obstacle3.objecty -=display_height
     obstacle3.objectx = random.randrange(0,(display_width - obstacle3.objectw))
     game_loop()
-		
-			
+				
 def game_loop():
 	
 	gameExit = False
@@ -105,9 +89,7 @@ def game_loop():
 			crash()
 	
 		pygame.display.update()
-		clock.tick(60)
-		
-
+		clock.tick(60)		
 #used to display the welcome message
 gameDisplay.fill(white)
 pygame.display.update()
