@@ -1,22 +1,29 @@
 import pygame
 import random
 
-
 class squareObject:
 
-	def __init__(self,objectx, objecty, objectw, objecth, object_speed, color):
-		self.objectx = objectx
-		self.objecty = objecty
-		self.object_speed = object_speed
-		self.objectw = objectw
-		self.objecth = objecth
-		self.color = color
+	def __init__(self, square_image, square_width, square_height,x,y):
+		self.square_image = square_image
+		self.square_width = square_width
+		self.square_height = square_height
+		self.x = x
+		self.y = y
 		
 		
-	def draw_object_rec(self,gameDisplay):
-		pygame.draw.rect(gameDisplay, (0,0,0), [self.objectx, self.objecty, self.objectw, self.objecth])
+	def square(self,gameDisplay,x,y):
 		
-	def respawn_check(self,x,y,display_height,display_width):
+		gameDisplay.blit(self.square_image, (x,y))
+		self.x = x
+		self.y = y
+		
+	def move_square(self,gameDisplay,display_width,display_height):
+		
+		new_x = random.randrange(0,display_width)
+		new_y = 0
+		self.square(gameDisplay,new_x, new_y)
+		
+	def respawn_check(self,x,y,display_width,display_height):
 		if y > display_height:
 			self.objecty = 0 - self.objecth
 			self.objectx = random.randrange(0,display_width)
@@ -40,7 +47,13 @@ class player:
 		self.car_height = car_height
 		
 	def car(self,gameDisplay,x,y):
+		
 		gameDisplay.blit(self.car_image, (x,y))
+		
+	def rectCar(self,gameDisplay,x,y):
+		
+		gameDisplay.blit(self.car_image, (x,y))
+		
 		
 		
 
